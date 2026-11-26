@@ -124,3 +124,48 @@ class VehiclePhoto(models.Model):
 
     def __str__(self):
         return f"Foto de {self.vehicle}"
+
+
+class Lead(models.Model):
+    class IntentChoices(models.TextChoices):
+        INTEREST = "interesse", "Tenho interesse neste veículo"
+        FINANCING = "financiamento", "Quero simular financiamento"
+        TRADE_IN = "troca", "Quero dar meu usado na troca"
+        VISIT = "visita", "Quero agendar uma visita"
+
+    class StatusChoices(models.TextChoices):
+        NEW = "novo", "Novo"
+        CONTACTED = "em_contato", "Em contato"
+        CLOSED = "fechado", "Venda concluída"
+        LOST = "perdido", "Não avançou"
+
+    vehicle = models.ForeignKey(
+        Vehicle,
+        on_delete=models.CASCADE,
+        related_name="leads",
+        verbose_name="Veículo",
+    )
+    name = models.CharField("Nome do Cliente", max_length=100)
+    phone = models.CharField("WhatsApp / Telefone", max_length=25)
+    intent = models.CharField(
+        "Assunto",
+        max_length=20,
+        choices=IntentChoices.choices,
+        default=IntentChoices.INTEREST,
+    )
+    status = models.CharField(
+        "Status do Atendimento",
+        max_length=20,
+        choices=StatusChoices.choices,
+        default=StatusChoices.NEW,
+    )
+    notes = models.TextField("Observações internas", blank=True)
+    created_at = models.DateTimeField("Recebido em", auto_now_add=True)
+
+    class Meta:
+        verbose_name = "Interessado (Lead)"
+        verbose_name_plural = "Interessados (Leads)"
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return f"{self.name} - {self.vehicle}"

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Brand, Vehicle, VehiclePhoto
+from .models import Brand, Lead, Vehicle, VehiclePhoto
 
 
 @admin.register(Brand)
@@ -31,3 +31,12 @@ class VehicleAdmin(admin.ModelAdmin):
     list_editable = ("price", "status", "is_featured")
     prepopulated_fields = {"slug": ("model", "year_model")}
     inlines = [VehiclePhotoInline]
+
+
+@admin.register(Lead)
+class LeadAdmin(admin.ModelAdmin):
+    list_display = ("name", "phone", "vehicle", "intent", "status", "created_at")
+    list_filter = ("status", "intent", "created_at")
+    search_fields = ("name", "phone", "vehicle__model", "vehicle__brand__name")
+    list_editable = ("status",)
+    readonly_fields = ("created_at",)
