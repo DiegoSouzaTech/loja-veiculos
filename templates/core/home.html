@@ -61,7 +61,7 @@
                                 <span class="text-xs text-slate-400 block">Valor à vista</span>
                                 <span class="text-xl font-bold text-slate-900">R$ {{ vehicle.price }}</span>
                             </div>
-                            <a href="#" class="bg-orange-500 hover:bg-orange-600 text-white text-sm font-semibold px-4 py-2 rounded-lg transition">
+                            <a href="{% url 'vehicles:detail' vehicle.slug %}" class="bg-orange-500 hover:bg-orange-600 text-white text-sm font-semibold px-4 py-2 rounded-lg transition">
                                 Ver detalhes
                             </a>
                         </div>
