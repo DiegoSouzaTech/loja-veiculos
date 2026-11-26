@@ -8,6 +8,5 @@ urlpatterns = [
     path("", include("core.urls")),
 ]
 
-# Em desenvolvimento, o Django serve as fotos enviadas
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
