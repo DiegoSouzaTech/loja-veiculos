@@ -5,18 +5,22 @@ from vehicles.models import Vehicle
 
 
 def home(request):
-    featured_vehicles = (
+    featured_vehicles = list(
         Vehicle.objects.filter(status=Vehicle.StatusChoices.AVAILABLE, is_featured=True)
         .select_related("brand")
         .prefetch_related("photos")[:6]
     )
 
-    if not featured_vehicles:
-        featured_vehicles = (
+    # Se houver menos de 6 destaques marcados, completa com os mais recentes do estoque
+    if len(featured_vehicles) < 6:
+        featured_ids = [v.id for v in featured_vehicles]
+        extra_vehicles = (
             Vehicle.objects.filter(status=Vehicle.StatusChoices.AVAILABLE)
+            .exclude(id__in=featured_ids)
             .select_related("brand")
-            .prefetch_related("photos")[:6]
+            .prefetch_related("photos")[: 6 - len(featured_vehicles)]
         )
+        featured_vehicles.extend(extra_vehicles)
 
     context = {
         "featured_vehicles": featured_vehicles,
