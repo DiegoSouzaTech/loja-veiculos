@@ -3,34 +3,35 @@
 {% block title %}Estoque | {{ site_name }}{% endblock %}
 
 {% block content %}
-<section class="max-w-6xl mx-auto px-4 py-10">
+<section class="max-w-7xl mx-auto px-4 sm:px-6 py-12">
     <div class="mb-8">
-        <h1 class="text-3xl font-bold text-slate-900">Nosso Estoque</h1>
-        <p class="text-slate-600 mt-1">Filtre por marca ou busque pelo modelo desejado.</p>
+        <span class="text-brand-accent font-extrabold text-xs uppercase tracking-[0.2em]">Catálogo</span>
+        <h1 class="text-3xl sm:text-4xl font-extrabold text-brand-primary mt-1 tracking-tight">Nosso Estoque</h1>
+        <p class="text-muted mt-1">Filtre por marca ou busque pelo modelo desejado.</p>
     </div>
 
-    <!-- Barra de Filtros -->
-    <form method="get" class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm mb-8 flex flex-col sm:flex-row gap-4">
+    <!-- Barra de Filtros Dark -->
+    <form method="get" class="vehicle-card p-4 sm:p-5 mb-10 flex flex-col sm:flex-row gap-3">
         <input type="text"
                name="q"
                value="{{ query }}"
                placeholder="Buscar modelo (ex: Civic, Corolla...)"
-               class="flex-grow border border-slate-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:border-orange-500">
+               class="flex-grow input-dark rounded-xl px-4 py-2.5 text-sm">
 
-        <select name="marca" class="border border-slate-300 rounded-lg px-4 py-2 text-sm bg-white focus:outline-none focus:border-orange-500">
-            <option value="">Todas as marcas</option>
+        <select name="marca" class="input-dark rounded-xl px-4 py-2.5 text-sm">
+            <option value="" class="bg-slate-900 text-white">Todas as marcas</option>
             {% for brand in brands %}
-                <option value="{{ brand.slug }}" {% if selected_brand == brand.slug %}selected{% endif %}>
+                <option value="{{ brand.slug }}" class="bg-slate-900 text-white" {% if selected_brand == brand.slug %}selected{% endif %}>
                     {{ brand.name }}
                 </option>
             {% endfor %}
         </select>
 
-        <button type="submit" class="bg-slate-900 hover:bg-slate-800 text-white text-sm font-semibold px-6 py-2 rounded-lg transition">
+        <button type="submit" class="btn-accent text-sm font-bold px-7 py-2.5 cursor-pointer">
             Filtrar
         </button>
         {% if query or selected_brand %}
-            <a href="{% url 'vehicles:list' %}" class="text-sm text-slate-500 hover:text-slate-800 self-center px-2">
+            <a href="{% url 'vehicles:list' %}" class="text-sm font-semibold text-muted hover:text-brand-accent self-center px-3">
                 Limpar
             </a>
         {% endif %}
@@ -38,40 +39,56 @@
 
     <!-- Grid de Veículos -->
     {% if vehicles %}
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {% for vehicle in vehicles %}
-                <article class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex flex-col hover:shadow-md transition">
-                    <div class="aspect-video bg-slate-200 relative overflow-hidden">
+                <article class="vehicle-card overflow-hidden flex flex-col">
+                    <a href="{% url 'vehicles:detail' vehicle.slug %}" class="aspect-[16/10] bg-slate-950 relative overflow-hidden block group">
                         {% if vehicle.cover_photo %}
-                            <img src="{{ vehicle.cover_photo.image.url }}" alt="{{ vehicle }}" class="w-full h-full object-cover">
+                            <img src="{{ vehicle.cover_photo.image.url }}" alt="{{ vehicle }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500 ease-out">
                         {% else %}
-                            <div class="w-full h-full flex items-center justify-center text-slate-400 text-sm">Sem foto</div>
+                            <div class="w-full h-full flex items-center justify-center text-muted text-sm">Sem foto</div>
                         {% endif %}
-                        <span class="absolute top-3 left-3 bg-slate-900/85 text-white text-xs font-semibold px-2.5 py-1 rounded">
+                        <span class="absolute top-3.5 left-3.5 bg-black/75 backdrop-blur-md text-white text-xs font-bold px-3 py-1 rounded-lg border border-white/15">
                             {{ vehicle.year_manufacture }}/{{ vehicle.year_model }}
                         </span>
-                    </div>
+                    </a>
 
-                    <div class="p-5 flex-grow flex flex-col justify-between">
+                    <div class="p-6 flex-grow flex flex-col justify-between">
                         <div>
-                            <p class="text-xs font-semibold uppercase tracking-wider text-orange-600">{{ vehicle.brand.name }}</p>
-                            <h2 class="text-lg font-bold text-slate-900 mt-0.5">
-                                {{ vehicle.model }} <span class="font-normal text-slate-600">{{ vehicle.version }}</span>
+                            <div class="flex items-center justify-between">
+                                <span class="text-xs font-extrabold uppercase tracking-widest text-brand-accent">{{ vehicle.brand.name }}</span>
+                                <span class="text-xs font-medium text-muted">{{ vehicle.color }}</span>
+                            </div>
+                            <h2 class="text-xl font-extrabold text-brand-primary mt-1 leading-snug">
+                                <a href="{% url 'vehicles:detail' vehicle.slug %}" class="hover:text-brand-accent transition">
+                                    {{ vehicle.model }}
+                                    <span class="block text-sm font-medium text-muted mt-0.5">{{ vehicle.version }}</span>
+                                </a>
                             </h2>
-                            <div class="flex flex-wrap gap-2 mt-3 text-xs text-slate-600">
-                                <span class="bg-slate-100 px-2.5 py-1 rounded">{{ vehicle.mileage }} km</span>
-                                <span class="bg-slate-100 px-2.5 py-1 rounded">{{ vehicle.get_transmission_display }}</span>
-                                <span class="bg-slate-100 px-2.5 py-1 rounded">{{ vehicle.get_fuel_display }}</span>
+
+                            <div class="grid grid-cols-3 gap-2 mt-4 pt-4 border-t border-white/10 text-center text-xs">
+                                <div class="surface-pill rounded-lg py-2 px-1">
+                                    <span class="text-muted block text-[10px] uppercase">KM</span>
+                                    <span class="font-bold text-brand-primary">{{ vehicle.mileage }}</span>
+                                </div>
+                                <div class="surface-pill rounded-lg py-2 px-1">
+                                    <span class="text-muted block text-[10px] uppercase">Câmbio</span>
+                                    <span class="font-bold text-brand-primary">{{ vehicle.get_transmission_display }}</span>
+                                </div>
+                                <div class="surface-pill rounded-lg py-2 px-1">
+                                    <span class="text-muted block text-[10px] uppercase">Motor</span>
+                                    <span class="font-bold text-brand-primary">{{ vehicle.get_fuel_display }}</span>
+                                </div>
                             </div>
                         </div>
 
-                        <div class="mt-5 pt-4 border-t border-slate-100 flex items-center justify-between">
+                        <div class="mt-6 pt-4 border-t border-white/10 flex items-center justify-between gap-3">
                             <div>
-                                <span class="text-xs text-slate-400 block">Valor à vista</span>
-                                <span class="text-xl font-bold text-slate-900">R$ {{ vehicle.price }}</span>
+                                <span class="text-[11px] uppercase tracking-wider text-muted block">Valor à vista</span>
+                                <span class="text-2xl font-extrabold text-brand-primary font-price">R$ {{ vehicle.price }}</span>
                             </div>
-                            <a href="{% url 'vehicles:detail' vehicle.slug %}" class="bg-orange-500 hover:bg-orange-600 text-white text-sm font-semibold px-4 py-2 rounded-lg transition">
-                                Ver detalhes
+                            <a href="{% url 'vehicles:detail' vehicle.slug %}" class="btn-accent text-sm font-bold px-5 py-3 shrink-0">
+                                Ver carro
                             </a>
                         </div>
                     </div>
@@ -79,7 +96,7 @@
             {% endfor %}
         </div>
     {% else %}
-        <div class="bg-white border border-slate-200 rounded-xl p-8 text-center text-slate-500">
+        <div class="vehicle-card p-12 text-center text-muted">
             Nenhum veículo encontrado com os filtros selecionados.
         </div>
     {% endif %}

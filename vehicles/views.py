@@ -64,5 +64,6 @@ def vehicle_detail(request, slug):
     context = {
         "vehicle": vehicle,
         "intent_choices": Lead.IntentChoices.choices,
+        "whatsapp_number": settings.WHATSAPP_NUMBER,
     }
     return render(request, "vehicles/vehicle_detail.html", context)

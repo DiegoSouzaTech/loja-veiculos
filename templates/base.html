@@ -1,54 +1,157 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}{{ site_name }}{% endblock %}</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="{% static 'css/theme.css' %}">
 </head>
-<body class="bg-slate-50 text-slate-800 flex flex-col min-h-screen">
-    <!-- Navbar -->
-    <header class="bg-slate-900 text-white shadow-md">
-        <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
-            <a href="/" class="flex items-center gap-2 font-bold text-xl tracking-tight">
-                <span class="bg-orange-500 text-white px-2.5 py-1 rounded text-sm">{{ site_short_name }}</span>
-                <span>{{ site_name }}</span>
+<body class="flex flex-col min-h-screen">
+    <a href="#main-content"
+       class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 btn-accent font-bold px-4 py-2">
+        Pular para o conteúdo principal
+    </a>
+
+    <!-- Barra de Acessibilidade -->
+    <div class="bg-black text-slate-300 text-xs border-b border-white/10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-1.5 flex items-center justify-between">
+            <span class="hidden sm:flex items-center gap-2 text-slate-400">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                Showroom Online • Recife, PE
+            </span>
+            <div class="flex items-center gap-1.5 ml-auto" role="region" aria-label="Controles de acessibilidade">
+                <span class="text-slate-400 mr-1.5 hidden xs:inline">Acessibilidade:</span>
+                <button type="button" onclick="changeFontSize(-1)" aria-label="Diminuir fonte"
+                        class="px-2 py-0.5 rounded bg-white/10 hover:bg-white/20 text-white font-semibold transition cursor-pointer">A-</button>
+                <button type="button" onclick="resetFontSize()" aria-label="Fonte padrão"
+                        class="px-2 py-0.5 rounded bg-white/10 hover:bg-white/20 text-white font-semibold transition cursor-pointer">A</button>
+                <button type="button" onclick="changeFontSize(1)" aria-label="Aumentar fonte"
+                        class="px-2 py-0.5 rounded bg-white/10 hover:bg-white/20 text-white font-semibold transition cursor-pointer">A+</button>
+                <button type="button" onclick="toggleHighContrast()" aria-pressed="false" id="btn-contrast"
+                        class="ml-1.5 px-2.5 py-0.5 rounded bg-white/10 hover:bg-white/20 text-white font-semibold transition cursor-pointer">
+                    Alto Contraste
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header Glassmorphism -->
+    <header class="glass-nav text-white sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex flex-wrap items-center justify-between gap-4">
+            <a href="{% url 'core:home' %}" class="flex items-center gap-3 group">
+                <span class="bg-brand-accent text-white font-extrabold px-3 py-1.5 rounded-xl text-sm tracking-wider shadow-lg group-hover:scale-105 transition">
+                    {{ site_short_name }}
+                </span>
+                <div class="leading-none">
+                    <span class="font-extrabold text-lg sm:text-xl tracking-tight block">{{ site_name }}</span>
+                    <span class="text-[10px] uppercase tracking-[0.2em] text-slate-400">Premium Motors</span>
+                </div>
             </a>
-            <nav class="flex items-center gap-6 text-sm font-medium">
-                <a href="{% url 'core:home' %}" class="hover:text-orange-400 transition">Início</a>
-                <a href="{% url 'vehicles:list' %}" class="hover:text-orange-400 transition">Estoque</a>
-                <a href="{% url 'core:sell_vehicle' %}" class="hover:text-orange-400 transition">Venda seu Carro</a>
-                <a href="{% url 'core:about' %}" class="hover:text-orange-400 transition">Sobre</a>
-                <a href="/gestao/" class="text-slate-400 hover:text-white transition">Gestão</a>
+
+            <nav aria-label="Navegação principal" class="flex flex-wrap items-center gap-6 sm:gap-8 text-sm font-semibold">
+                <a href="{% url 'core:home' %}" class="text-slate-200 hover:text-orange-400 transition">Início</a>
+                <a href="{% url 'vehicles:list' %}" class="text-slate-200 hover:text-orange-400 transition">Estoque</a>
+                <a href="{% url 'core:sell_vehicle' %}" class="text-slate-200 hover:text-orange-400 transition">Venda seu Carro</a>
+                <a href="{% url 'core:about' %}" class="text-slate-200 hover:text-orange-400 transition">Sobre</a>
+                <a href="/gestao/"
+                   class="bg-white/10 hover:bg-white/20 text-white border border-white/15 px-3.5 py-1.5 rounded-xl text-xs font-bold tracking-wide transition">
+                    Gestão
+                </a>
             </nav>
         </div>
     </header>
 
-    <!-- Conteúdo -->
-    <main class="flex-grow">
+    <main id="main-content" class="flex-grow">
         {% block content %}{% endblock %}
     </main>
 
-    <!-- Rodapé -->
-    <footer class="bg-slate-900 text-slate-400 text-sm py-6 mt-12">
-        <div class="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row justify-between items-center gap-2">
+    <!-- Rodapé Corporativo -->
+    <footer class="bg-brand-primary text-slate-300 text-sm py-14 mt-20 border-t border-white/10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 grid grid-cols-1 md:grid-cols-4 gap-10">
+            <div class="md:col-span-2">
+                <div class="flex items-center gap-2.5 font-extrabold text-xl text-white">
+                    <span class="bg-brand-accent text-white px-2.5 py-1 rounded-lg text-xs">{{ site_short_name }}</span>
+                    <span>{{ site_name }}</span>
+                </div>
+                <p class="text-slate-400 mt-4 max-w-md leading-relaxed">
+                    Curadoria de seminovos com laudo cautelar aprovado, histórico transparente e atendimento ágil direto pelo WhatsApp.
+                </p>
+            </div>
+
+            <div>
+                <h2 class="text-white font-bold uppercase tracking-widest text-xs mb-4">Acesso Rápido</h2>
+                <ul class="space-y-2.5 text-slate-400">
+                    <li><a href="{% url 'core:home' %}" class="hover:text-orange-400 transition">Página Inicial</a></li>
+                    <li><a href="{% url 'vehicles:list' %}" class="hover:text-orange-400 transition">Catálogo Completo</a></li>
+                    <li><a href="{% url 'core:sell_vehicle' %}" class="hover:text-orange-400 transition">Avalie seu Usado</a></li>
+                    <li><a href="{% url 'core:about' %}" class="hover:text-orange-400 transition">Nossa Estrutura</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h2 class="text-white font-bold uppercase tracking-widest text-xs mb-4">Showroom</h2>
+                <p class="text-slate-400">Recife - Pernambuco</p>
+                <p class="text-slate-400 mt-2">Seg a Sex: 08h às 18h</p>
+                <p class="text-slate-400">Sábado: 08h às 13h</p>
+            </div>
+        </div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 mt-10 pt-6 border-t border-white/10 text-xs text-slate-500 flex flex-col sm:flex-row justify-between gap-2">
             <p>&copy; {% now "Y" %} {{ site_name }}. Todos os direitos reservados.</p>
-            <p>Recife - PE</p>
+            <p>Plataforma desenvolvida por Diego Souza Tech</p>
         </div>
     </footer>
 
+    <!-- Botão Flutuante WhatsApp com Pulso -->
     {% if whatsapp_number %}
-        <a href="https://wa.me/{{ whatsapp_number }}?text=Olá! Vim pelo site da {{ site_name|urlencode }} e gostaria de mais informações."
+        <a href="https://wa.me/{{ whatsapp_number }}?text=Olá! Vim pelo site da {{ site_name|urlencode }} e gostaria de atendimento."
            target="_blank"
            rel="noopener noreferrer"
            aria-label="Falar com a loja pelo WhatsApp"
-           class="fixed bottom-6 right-6 z-50 bg-green-600 hover:bg-green-700 text-white p-4 rounded-full shadow-lg hover:scale-105 transition flex items-center gap-2">
+           class="whatsapp-fab fixed bottom-6 right-6 z-50 bg-emerald-600 hover:bg-emerald-500 text-white px-5 py-3.5 rounded-full shadow-2xl hover:scale-105 transition flex items-center gap-2.5">
             <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.1.824z"/>
             </svg>
-            <span class="hidden sm:inline text-sm font-semibold pr-1">WhatsApp</span>
+            <span class="hidden sm:inline text-sm font-bold tracking-wide">WhatsApp</span>
         </a>
     {% endif %}
 
+    <script>
+        (function () {
+            const root = document.documentElement;
+            let currentSize = parseInt(localStorage.getItem("rm_font_size")) || 16;
+            const highContrast = localStorage.getItem("rm_high_contrast") === "true";
+
+            root.style.setProperty("--base-font-size", currentSize + "px");
+            if (highContrast) {
+                root.classList.add("high-contrast");
+                const btn = document.getElementById("btn-contrast");
+                if (btn) btn.setAttribute("aria-pressed", "true");
+            }
+
+            window.changeFontSize = function (delta) {
+                currentSize = Math.min(20, Math.max(14, currentSize + delta));
+                root.style.setProperty("--base-font-size", currentSize + "px");
+                localStorage.setItem("rm_font_size", currentSize);
+            };
+            window.resetFontSize = function () {
+                currentSize = 16;
+                root.style.setProperty("--base-font-size", "16px");
+                localStorage.setItem("rm_font_size", "16");
+            };
+            window.toggleHighContrast = function () {
+                const active = root.classList.toggle("high-contrast");
+                localStorage.setItem("rm_high_contrast", active);
+                const btn = document.getElementById("btn-contrast");
+                if (btn) btn.setAttribute("aria-pressed", String(active));
+            };
+        })();
+    </script>
 </body>
 </html>

@@ -31,9 +31,9 @@ if not DEBUG:
 ADMIN_URL = os.environ.get("ADMIN_URL", "gestao/")
 
 # ===== Dados da loja (fáceis de trocar) =====
-SITE_NAME = os.environ.get("SITE_NAME", "Recife Motors")
-SITE_SHORT_NAME = "RM"
-WHATSAPP_NUMBER = os.environ.get("WHATSAPP_NUMBER", "")
+SITE_NAME = os.getenv("SITE_NAME", "Recife Motors")
+SITE_SHORT_NAME = os.getenv("SITE_SHORT_NAME", "RM")
+WHATSAPP_NUMBER = os.getenv("WHATSAPP_NUMBER", "")
 
 # ===== Aplicações =====
 INSTALLED_APPS = [

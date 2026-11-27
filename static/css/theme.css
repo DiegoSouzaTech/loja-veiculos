@@ -1,0 +1,195 @@
+/* ==========================================================================
+   MOTOR VISUAL WHITE-LABEL — SHOWROOM DARK PREMIUM (RECIFE MOTORS)
+   Edite apenas o bloco :root para adaptar a identidade a qualquer cliente.
+   ========================================================================== */
+:root {
+    /* Identidade Cromática Unificada (De cima a baixo) */
+    --brand-primary: #070b14;         /* Fundo profundo do topo e rodapé */
+    --brand-secondary: #0f1623;       /* Superfície base da vitrine */
+    --brand-accent: #f97316;          /* Laranja Solar (CTAs e destaques) */
+    --brand-accent-hover: #ea580c;
+    --brand-accent-glow: rgba(249, 115, 22, 0.35);
+
+    /* Superfícies Dark Elegantes (Elimina o branco-gelo) */
+    --surface-bg: #0b111e;            /* Fundo geral da página (continuidade do Hero) */
+    --surface-card: #131c2e;          /* Cards elevados com profundidade */
+    --surface-subtle: #1a253b;        /* Pills técnicos, inputs e caixas internas */
+    --surface-border: rgba(255, 255, 255, 0.09);
+
+    /* Tipografia de Alto Contraste */
+    --text-main: #f8fafc;             /* Branco nítido para títulos e preços */
+    --text-muted: #94a3b8;            /* Cinza-azulado suave para specs */
+
+    /* Geometria */
+    --font-display: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+    --base-font-size: 16px;
+    --radius-card: 1.25rem;
+    --radius-btn: 0.85rem;
+}
+
+/* Modo Alto Contraste (Botão na barra superior de acessibilidade) */
+html.high-contrast {
+    --brand-primary: #000000;
+    --brand-secondary: #000000;
+    --brand-accent: #fb923c;
+    --brand-accent-hover: #f97316;
+    --brand-accent-glow: transparent;
+    --surface-bg: #000000;
+    --surface-card: #0a0a0a;
+    --surface-subtle: #171717;
+    --surface-border: #ffffff;
+    --text-main: #ffffff;
+    --text-muted: #e2e8f0;
+}
+
+html {
+    font-size: var(--base-font-size);
+    font-family: var(--font-display);
+    scroll-behavior: smooth;
+}
+
+body {
+    background-color: var(--surface-bg);
+    background-image:
+        radial-gradient(circle at 50% 0%, rgba(249, 115, 22, 0.07) 0%, transparent 55%),
+        radial-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    background-size: 100% 100%, 28px 28px;
+    color: var(--text-main);
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+}
+
+a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+    outline: 3px solid var(--brand-accent);
+    outline-offset: 3px;
+}
+
+/* ==========================================================================
+   COMPONENTES DE SHOWROOM
+   ========================================================================== */
+
+/* Hero integrado sem linha dura de corte para o conteúdo abaixo */
+.hero-showroom {
+    background-color: var(--brand-primary);
+    background-image:
+        radial-gradient(circle at 80% 25%, var(--brand-accent-glow) 0%, transparent 48%),
+        radial-gradient(circle at 15% 80%, rgba(56, 189, 248, 0.10) 0%, transparent 45%),
+        linear-gradient(180deg, transparent 70%, var(--surface-bg) 100%),
+        linear-gradient(180deg, rgba(255,255,255,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+    background-size: 100% 100%, 100% 100%, 100% 100%, 48px 48px, 48px 48px;
+}
+
+/* Navbar Glassmorphism */
+.glass-nav {
+    background: rgba(7, 11, 20, 0.85);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Barra de Busca Dark Glass */
+.glass-search {
+    background: rgba(19, 28, 46, 0.88);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.65);
+}
+
+/* Card de Veículo Dark Elevado */
+.vehicle-card {
+    background: linear-gradient(180deg, var(--surface-card) 0%, #0f1726 100%);
+    border: 1px solid var(--surface-border);
+    border-radius: var(--radius-card);
+    box-shadow: 0 18px 36px -10px rgba(0, 0, 0, 0.55);
+    transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s ease, border-color 0.3s ease;
+}
+
+.vehicle-card:hover {
+    transform: translateY(-6px);
+    border-color: rgba(249, 115, 22, 0.55);
+    box-shadow: 0 24px 48px -12px rgba(0, 0, 0, 0.75), 0 0 24px -6px rgba(249, 115, 22, 0.22);
+}
+
+/* Caixas internas (Specs, Preço, Inputs) */
+.surface-pill {
+    background-color: var(--surface-subtle);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.input-dark {
+    background-color: var(--surface-subtle);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: var(--text-main);
+}
+
+.input-dark::placeholder {
+    color: var(--text-muted);
+}
+
+.input-dark:focus {
+    border-color: var(--brand-accent);
+    outline: none;
+}
+
+/* Botão Principal com Sheen Metálico */
+.btn-accent {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(135deg, var(--brand-accent) 0%, var(--brand-accent-hover) 100%);
+    color: #ffffff;
+    border-radius: var(--radius-btn);
+    box-shadow: 0 10px 24px -6px var(--brand-accent-glow);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-accent:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 14px 28px -6px var(--brand-accent-glow);
+}
+
+.btn-accent::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 60%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transform: skewX(-25deg);
+    transition: left 0.65s ease;
+}
+
+.btn-accent:hover::after {
+    left: 140%;
+}
+
+/* Pulso no WhatsApp */
+@keyframes pulse-ring {
+    0% { transform: scale(0.95); opacity: 0.7; }
+    70% { transform: scale(1.25); opacity: 0; }
+    100% { transform: scale(1.25); opacity: 0; }
+}
+
+.whatsapp-fab {
+    position: relative;
+}
+
+.whatsapp-fab::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 9999px;
+    background: #10b981;
+    z-index: -1;
+    animation: pulse-ring 2.4s infinite cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+
+/* Utilitários Semânticos White-Label */
+.bg-brand-primary { background-color: var(--brand-primary); }
+.text-brand-primary { color: var(--text-main); }
+.text-brand-accent { color: var(--brand-accent); }
+.bg-brand-accent { background-color: var(--brand-accent); }
+.text-muted { color: var(--text-muted); }
+.font-price { font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }

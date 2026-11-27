@@ -3,66 +3,148 @@
 {% block title %}Início | {{ site_name }}{% endblock %}
 
 {% block content %}
-<!-- Hero -->
-<section class="bg-slate-900 text-white py-14 border-t border-slate-800">
-    <div class="max-w-6xl mx-auto px-4">
-        <span class="text-orange-400 font-semibold text-sm uppercase tracking-wider">Seminovos Selecionados</span>
-        <h1 class="text-3xl sm:text-4xl font-bold mt-2">Encontre o seu próximo carro na {{ site_name }}</h1>
-        <p class="text-slate-300 mt-3 max-w-xl">Veículos revisados, procedência garantida e negociação direta pelo WhatsApp.</p>
+<!-- Hero Showroom -->
+<section class="hero-showroom text-white py-20 sm:py-28 relative">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+        <div class="max-w-3xl">
+            <div class="inline-flex items-center gap-2 bg-white/10 border border-white/15 backdrop-blur-md px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest text-orange-300">
+                <span class="w-2 h-2 rounded-full bg-orange-400"></span>
+                Curadoria Automotiva em Recife
+            </div>
+
+            <h1 class="text-4xl sm:text-6xl font-extrabold mt-6 leading-[1.08] tracking-tight">
+                O próximo nível do seu <span class="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-amber-300">seminovo</span> começa aqui.
+            </h1>
+
+            <p class="text-slate-300 mt-5 text-base sm:text-xl max-w-2xl leading-relaxed font-normal">
+                Veículos periciados, histórico transparente e negociação sem intermediários direto com nossos consultores.
+            </p>
+        </div>
+
+        <!-- Barra de Busca Flutuante Dark Glass -->
+        <form action="{% url 'vehicles:list' %}" method="get"
+              class="glass-search mt-10 p-3 rounded-2xl max-w-3xl flex flex-col sm:flex-row gap-2.5">
+            <div class="flex-grow flex items-center px-3">
+                <svg class="w-5 h-5 text-slate-400 mr-3 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35m1.85-5.15a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                </svg>
+                <label for="hero-search" class="sr-only">Buscar modelo</label>
+                <input id="hero-search"
+                       type="text"
+                       name="q"
+                       placeholder="Busque por modelo (ex: Civic, Corolla, Compass, Hilux...)"
+                       class="w-full py-2.5 text-sm sm:text-base text-white placeholder-slate-400 bg-transparent focus:outline-none">
+            </div>
+            <button type="submit"
+                    class="btn-accent font-bold text-sm sm:text-base px-8 py-3.5 cursor-pointer shrink-0">
+                Explorar Estoque
+            </button>
+        </form>
+
+        <!-- Métricas / Pilares Rápidos -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-14 max-w-4xl">
+            <div class="bg-white/5 border border-white/10 rounded-2xl p-4 backdrop-blur-sm">
+                <span class="text-orange-400 font-extrabold text-sm block">100% Periciados</span>
+                <span class="text-slate-400 text-xs mt-1 block">Laudo cautelar e procedência verificada em todo o estoque.</span>
+            </div>
+            <div class="bg-white/5 border border-white/10 rounded-2xl p-4 backdrop-blur-sm">
+                <span class="text-orange-400 font-extrabold text-sm block">Troca Inteligente</span>
+                <span class="text-slate-400 text-xs mt-1 block">Avaliação justa do seu usado na negociação.</span>
+            </div>
+            <div class="bg-white/5 border border-white/10 rounded-2xl p-4 backdrop-blur-sm">
+                <span class="text-orange-400 font-extrabold text-sm block">Atendimento Direto</span>
+                <span class="text-slate-400 text-xs mt-1 block">Sem robôs: fale direto com o consultor no WhatsApp.</span>
+            </div>
+        </div>
     </div>
 </section>
 
 <!-- Vitrine de Destaques -->
-<section id="destaques" class="max-w-6xl mx-auto px-4 py-12">
-    <div class="flex items-center justify-between mb-8">
-        <h2 class="text-2xl font-bold text-slate-900">Veículos em Destaque</h2>
-        <span class="text-sm text-slate-500">{{ featured_vehicles|length }} veículo(s) disponível(is)</span>
+<section id="destaques" class="max-w-7xl mx-auto px-4 sm:px-6 py-16">
+    <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10">
+        <div>
+            <span class="text-brand-accent font-extrabold text-xs uppercase tracking-[0.2em]">Showroom</span>
+            <h2 class="text-3xl sm:text-4xl font-extrabold text-brand-primary mt-1 tracking-tight">Destaques da Semana</h2>
+        </div>
+        <a href="{% url 'vehicles:list' %}"
+           class="inline-flex items-center gap-2 text-sm font-bold text-brand-primary hover:text-brand-accent transition">
+            <span>Ver todo o estoque</span>
+            <span aria-hidden="true">&rarr;</span>
+        </a>
     </div>
 
     {% if featured_vehicles %}
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {% for vehicle in featured_vehicles %}
-                <article class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex flex-col hover:shadow-md transition">
-                    <!-- Foto de Capa -->
-                    <div class="aspect-video bg-slate-200 relative overflow-hidden">
+                <article class="vehicle-card overflow-hidden flex flex-col">
+                    <!-- Imagem com Zoom Suave e Badges -->
+                    <a href="{% url 'vehicles:detail' vehicle.slug %}" class="aspect-[16/10] bg-slate-900 relative overflow-hidden block group">
                         {% if vehicle.cover_photo %}
                             <img src="{{ vehicle.cover_photo.image.url }}"
                                  alt="{{ vehicle }}"
-                                 class="w-full h-full object-cover">
+                                 class="w-full h-full object-cover group-hover:scale-105 transition duration-500 ease-out">
                         {% else %}
                             <div class="w-full h-full flex items-center justify-center text-slate-400 text-sm">
                                 Sem foto cadastrada
                             </div>
                         {% endif %}
-                        <span class="absolute top-3 left-3 bg-slate-900/85 text-white text-xs font-semibold px-2.5 py-1 rounded">
+
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-70"></div>
+
+                        <span class="absolute top-3.5 left-3.5 bg-black/75 backdrop-blur-md text-white text-xs font-bold px-3 py-1 rounded-lg border border-white/15">
                             {{ vehicle.year_manufacture }}/{{ vehicle.year_model }}
                         </span>
-                    </div>
 
-                    <!-- Informações -->
-                    <div class="p-5 flex-grow flex flex-col justify-between">
+                        {% if vehicle.is_featured %}
+                            <span class="absolute top-3.5 right-3.5 bg-brand-accent text-white text-[11px] font-extrabold uppercase tracking-wider px-2.5 py-1 rounded-lg shadow">
+                                Destaque
+                            </span>
+                        {% endif %}
+                    </a>
+
+                    <!-- Corpo do Card -->
+                    <div class="p-6 flex-grow flex flex-col justify-between">
                         <div>
-                            <p class="text-xs font-semibold uppercase tracking-wider text-orange-600">
-                                {{ vehicle.brand.name }}
-                            </p>
-                            <h3 class="text-lg font-bold text-slate-900 mt-0.5">
-                                {{ vehicle.model }} <span class="font-normal text-slate-600">{{ vehicle.version }}</span>
+                            <div class="flex items-center justify-between">
+                                <span class="text-xs font-extrabold uppercase tracking-widest text-brand-accent">
+                                    {{ vehicle.brand.name }}
+                                </span>
+                                <span class="text-xs font-medium text-muted">{{ vehicle.color }}</span>
+                            </div>
+
+                            <h3 class="text-xl font-extrabold text-brand-primary mt-1 leading-snug">
+                                <a href="{% url 'vehicles:detail' vehicle.slug %}" class="hover:text-brand-accent transition">
+                                    {{ vehicle.model }}
+                                    <span class="block text-sm font-medium text-muted mt-0.5">{{ vehicle.version }}</span>
+                                </a>
                             </h3>
 
-                            <div class="flex flex-wrap gap-2 mt-3 text-xs text-slate-600">
-                                <span class="bg-slate-100 px-2.5 py-1 rounded">{{ vehicle.mileage }} km</span>
-                                <span class="bg-slate-100 px-2.5 py-1 rounded">{{ vehicle.get_transmission_display }}</span>
-                                <span class="bg-slate-100 px-2.5 py-1 rounded">{{ vehicle.get_fuel_display }}</span>
+                            <!-- Pills Técnicos Dark -->
+                            <div class="grid grid-cols-3 gap-2 mt-4 pt-4 border-t border-white/10 text-center text-xs">
+                                <div class="surface-pill rounded-lg py-2 px-1">
+                                    <span class="text-muted block text-[10px] uppercase">KM</span>
+                                    <span class="font-bold text-brand-primary">{{ vehicle.mileage }}</span>
+                                </div>
+                                <div class="surface-pill rounded-lg py-2 px-1">
+                                    <span class="text-muted block text-[10px] uppercase">Câmbio</span>
+                                    <span class="font-bold text-brand-primary">{{ vehicle.get_transmission_display }}</span>
+                                </div>
+                                <div class="surface-pill rounded-lg py-2 px-1">
+                                    <span class="text-muted block text-[10px] uppercase">Motor</span>
+                                    <span class="font-bold text-brand-primary">{{ vehicle.get_fuel_display }}</span>
+                                </div>
                             </div>
                         </div>
 
-                        <div class="mt-5 pt-4 border-t border-slate-100 flex items-center justify-between">
+                        <!-- Rodapé Preço + CTA -->
+                        <div class="mt-6 pt-4 border-t border-white/10 flex items-center justify-between gap-3">
                             <div>
-                                <span class="text-xs text-slate-400 block">Valor à vista</span>
-                                <span class="text-xl font-bold text-slate-900">R$ {{ vehicle.price }}</span>
+                                <span class="text-[11px] uppercase tracking-wider text-muted block">Valor à vista</span>
+                                <span class="text-2xl font-extrabold text-brand-primary font-price">R$ {{ vehicle.price }}</span>
                             </div>
-                            <a href="{% url 'vehicles:detail' vehicle.slug %}" class="bg-orange-500 hover:bg-orange-600 text-white text-sm font-semibold px-4 py-2 rounded-lg transition">
-                                Ver detalhes
+                            <a href="{% url 'vehicles:detail' vehicle.slug %}"
+                               class="btn-accent text-sm font-bold px-5 py-3 shrink-0">
+                                Ver carro
                             </a>
                         </div>
                     </div>
@@ -70,7 +152,7 @@
             {% endfor %}
         </div>
     {% else %}
-        <div class="bg-white border border-slate-200 rounded-xl p-8 text-center text-slate-500">
+        <div class="vehicle-card p-12 text-center text-muted">
             Nenhum veículo disponível no momento.
         </div>
     {% endif %}
