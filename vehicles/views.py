@@ -2,6 +2,7 @@ from urllib.parse import quote
 from django.conf import settings
 from django.shortcuts import get_object_or_404, redirect, render
 from .models import Brand, Lead, Vehicle
+from django.utils.formats import number_format
 
 
 def vehicle_list(request):
@@ -36,10 +37,13 @@ def vehicle_detail(request, slug):
         slug=slug,
     )
 
-    if request.method == "POST":
-        name = request.POST.get("name", "").strip()
-        phone = request.POST.get("phone", "").strip()
-        intent = request.POST.get("intent", Lead.IntentChoices.INTEREST)
+    if request.method == "POST" and vehicle.status == Vehicle.StatusChoices.AVAILABLE:
+        name = request.POST.get("name", "").strip()[:100]
+        phone = request.POST.get("phone", "").strip()[:25]
+        intent = request.POST.get("intent", Lead.IntentChoices.FINANCING)
+        valid_intents = {choice[0] for choice in Lead.IntentChoices.choices}
+        if intent not in valid_intents:
+            intent = Lead.IntentChoices.FINANCING
 
         if name and phone:
             lead = Lead.objects.create(
@@ -48,18 +52,16 @@ def vehicle_detail(request, slug):
                 phone=phone,
                 intent=intent,
             )
-
-            whatsapp = settings.WHATSAPP_NUMBER
-            if whatsapp:
-                intent_label = lead.get_intent_display()
-                message = (
-                    f"Olá! Me chamo *{name}*. "
-                    f"Vi o *{vehicle}* (R$ {vehicle.price}) no site da *{settings.SITE_NAME}* "
-                    f"e gostaria de falar sobre: _{intent_label}_."
-                )
-                return redirect(f"https://wa.me/{whatsapp}?text={quote(message)}")
-
-            return redirect("vehicles:detail", slug=vehicle.slug)
+            intent_label = dict(Lead.IntentChoices.choices).get(intent, intent)
+            preco = number_format(vehicle.price, decimal_pos=2, force_grouping=True)
+            message = (
+                f"Olá! Me chamo *{lead.name}*. "
+                f"Vi o *{vehicle}* (R$ {preco}) no site da *{settings.SITE_NAME}*: "
+                f"{request.build_absolute_uri()} "
+                f"e gostaria de falar sobre: _{intent_label}_."
+            )
+            whatsapp_url = f"https://wa.me/{settings.WHATSAPP_NUMBER}?text={quote(message)}"
+            return redirect(whatsapp_url)
 
     context = {
         "vehicle": vehicle,

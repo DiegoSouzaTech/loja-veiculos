@@ -91,8 +91,7 @@ class Vehicle(models.Model):
 
     @property
     def cover_photo(self):
-        cover = self.photos.filter(is_cover=True).first()
-        return cover or self.photos.first()
+        return next(iter(self.photos.all()), None)
 
     def save(self, *args, **kwargs):
         if not self.slug:
