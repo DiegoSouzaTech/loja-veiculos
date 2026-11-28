@@ -43,7 +43,7 @@
     </div>
 </section>
 
-<!-- Vitrine de Destaques (Carrossel no Mobile / Grid 3 Colunas no Desktop) -->
+<!-- Vitrine de Destaques -->
 <section id="destaques" class="max-w-7xl mx-auto px-4 sm:px-6 pt-6 pb-12">
     <div class="flex items-end justify-between gap-4 mb-6">
         <div>
@@ -61,7 +61,89 @@
         <div class="flex md:grid md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-7 overflow-x-auto md:overflow-visible snap-x snap-mandatory pb-4 md:pb-0 -mx-4 px-4 md:mx-0 md:px-0">
             {% for vehicle in featured_vehicles %}
                 <article class="vehicle-card overflow-hidden flex flex-col shrink-0 w-[82%] sm:w-[60%] md:w-auto snap-center">
-                    <!-- Imagem Compacta -->
                     <a href="{% url 'vehicles:detail' vehicle.slug %}" class="aspect-[16/10] bg-slate-900 relative overflow-hidden block group">
                         {% if vehicle.cover_photo %}
                             <img src="{{ vehicle.cover_photo.image.url }}"
+                                 alt="{{ vehicle }}"
+                                 class="w-full h-full object-cover group-hover:scale-105 transition duration-500 ease-out">
+                        {% else %}
+                            <div class="w-full h-full flex items-center justify-center text-slate-400 text-xs">
+                                Sem foto cadastrada
+                            </div>
+                        {% endif %}
+
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-70"></div>
+
+                        <span class="absolute top-3 left-3 bg-black/75 backdrop-blur-md text-white text-[11px] font-bold px-2.5 py-1 rounded-lg border border-white/15">
+                            Ano {{ vehicle.year_model }}
+                        </span>
+
+                        {% if vehicle.is_featured %}
+                            <span class="absolute top-3 right-3 bg-brand-accent text-white text-[10px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded-md shadow">
+                                Destaque
+                            </span>
+                        {% endif %}
+                    </a>
+
+                    <div class="p-4 sm:p-5 flex-grow flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-[11px] font-extrabold uppercase tracking-widest text-brand-accent">
+                                    {{ vehicle.brand.name }}
+                                </span>
+                                <span class="text-[11px] font-medium text-muted">{{ vehicle.mileage }} km</span>
+                            </div>
+
+                            <h3 class="text-lg font-extrabold text-brand-primary mt-0.5 leading-snug truncate">
+                                <a href="{% url 'vehicles:detail' vehicle.slug %}" class="hover:text-brand-accent transition">
+                                    {{ vehicle.model }} <span class="font-medium text-muted text-sm">{{ vehicle.version }}</span>
+                                </a>
+                            </h3>
+
+                            <p class="text-xs text-muted mt-1.5">
+                                {{ vehicle.get_transmission_display }} &bull; {{ vehicle.get_fuel_display }} &bull; {{ vehicle.color }}
+                            </p>
+                        </div>
+
+                        <div class="mt-4 pt-3.5 border-t border-white/10 flex items-center justify-between gap-2">
+                            <div>
+                                <span class="text-[10px] uppercase tracking-wider text-muted block">À vista</span>
+                                <span class="text-xl font-extrabold text-brand-primary font-price">R$ {{ vehicle.price }}</span>
+                            </div>
+                            <a href="{% url 'vehicles:detail' vehicle.slug %}"
+                               class="btn-accent text-xs sm:text-sm font-bold px-4 py-2.5 shrink-0">
+                                Ver detalhes
+                            </a>
+                        </div>
+                    </div>
+                </article>
+            {% endfor %}
+        </div>
+        <p class="text-[11px] text-muted text-center mt-1 md:hidden">
+            Deslize para o lado para ver mais veículos &rarr;
+        </p>
+    {% else %}
+        <div class="vehicle-card p-10 text-center text-muted text-sm">
+            Nenhum veículo disponível no momento.
+        </div>
+    {% endif %}
+</section>
+
+<!-- Diferenciais da Loja -->
+<section class="max-w-7xl mx-auto px-4 sm:px-6 pt-4 pb-8">
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div class="vehicle-card p-5">
+            <span class="text-brand-accent font-extrabold text-sm block">Estoque Revisado</span>
+            <span class="text-muted text-xs mt-1 block leading-relaxed">Veículos selecionados e com histórico verificado antes da venda.</span>
+        </div>
+        <div class="vehicle-card p-5">
+            <span class="text-brand-accent font-extrabold text-sm block">Troca Inteligente</span>
+            <span class="text-muted text-xs mt-1 block leading-relaxed">Avaliação justa do seu usado na negociação.</span>
+        </div>
+        <div class="vehicle-card p-5">
+            <span class="text-brand-accent font-extrabold text-sm block">Atendimento Direto</span>
+            <span class="text-muted text-xs mt-1 block leading-relaxed">Sem robôs: fale direto com o consultor no WhatsApp.</span>
+        </div>
+    </div>
+</section>
+{% endblock %}
